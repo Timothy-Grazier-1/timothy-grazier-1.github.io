@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section id="layout">
+        <div class="container-fluid">
+            <nav class="navbar">
+                <!-- Icon logo -->
+                <a href="/" class="navbar-brand mr-auto">
+                    <div class="logo">
+                        <img src="/static/img/ttlogo.jpg" alt="DJ Timmy Turner"/>
+                        <p>DJ Timmy Turner</p>
+                    </div>
+                </a>
+
+                <!-- Collapse button -->
+                <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"
+                    aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i
+                        class="fas fa-bars fa-1x"></i></span></button>
+
+                <!-- Nav Options -->
+                <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent1">
+                    <ul class="navbar-nav">
+                        {% block nav %}
+                        {% endblock %}
+                    </ul>
+                </div>
+            </nav>
+            {% block page_content %}
+            {% endblock %}
+        </div>
+    </section>
+
+{% endblock %}

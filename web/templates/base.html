@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <!-- CSS -->
+        <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='vendor/bootstrap.min.css')}}" >
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='web.css') }}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q" crossorigin="anonymous">
+        <!-- Fonts! -->
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+        <!-- Javascript Libraries -->
+        <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <!-- Mobile -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="theme-color" content="#146eff">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+
+        <!-- Favicon -->
+        <link href="/static/img/favicon.ico" rel="icon" type="image/x-icon" />
+        <title>{% block title %}{% endblock %} &middot; DJ Timmy Turner</title>
+
+
+        {% block head %}
+        {% endblock %}
+
+        {% block meta %}
+        {% endblock %}
+    </head>
+    <body>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+
+            {% block end %}
+            {% endblock %}
+        </div>
+
+        <footer class="footer mt-auto py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm align-self-start left">
+                        <p>Fredsgatan 12 B, 212 12 PO Box 384<br>Malmö, Sweden</p>
+                    </div>
+                    <div class="col-sm align-self-center center">
+                        <img class="footer-image" src="/static/img/ttlogo.jpg" alt="DJ Timmy T Logo">
+                    </div>
+                    <div class="col-sm align-self-end right">
+                        <p><a target="_none" rel="noopener" href="djtimmyturner@gmail.com">Contact</a><br>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="{{ url_for('static', filename='vendor/jquery-3.3.1.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendor/bootstrap.min.js') }}"></script>
+    </body>
+</html>

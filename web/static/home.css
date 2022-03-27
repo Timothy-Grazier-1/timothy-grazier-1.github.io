@@ -1,0 +1,83 @@
+section#page_content .banner {
+    margin: auto !important;
+    height: auto;
+    width: 75vw;
+    clear: both;
+}
+
+section#page_content .banner  img {
+    max-height: 100%;
+    right: 0;
+}
+
+@media (max-width: 991px){
+    section#layout .banner {
+        width: 100vw !important;
+    }
+}
+
+@media (max-width: 560px){
+    .video {
+        width: 100%;
+    }
+
+    .video > iframe {
+        width: 100vw;
+    }
+}
+
+.video {
+    text-align: center;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+section#page_content .container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+section#page_content .about {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: "Open Sans", sans-serif;
+    padding: 50px 0 30px 15px;
+    line-height: 1.6em;
+    font-size: 1.1em;
+}
+
+section#page_content .about h3,
+section#page_content .about h4,
+section#page_content .about h5,
+section#page_content .about h6 {
+    text-transform: uppercase;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-align: center;
+}
+
+section#page_content .about p {
+    font-family: "Noto Sans", sans-serif;
+}
+
+section#page_content .about p a {
+    color: #ae1717;
+    font-weight: 700;
+}
+
+section#page_content .about h5 {
+    font-weight: 400;
+    font-size: 1.1em;
+    line-height: 1.3em;
+    margin-bottom: 40px;
+}

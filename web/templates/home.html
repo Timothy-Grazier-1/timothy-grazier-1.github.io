@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block nav %}
+		<li class="nav-item"><a class="nav-link active" href="/contact">Contact</a></li>
+		<li class="nav-item"><a class="nav-link active" href="/bookme">Booking</a></li>
+{% endblock %}
+
+{% block page_content %}
+	<section id="page_content">
+		<div class="banner">
+			<img src="static/img/header.png" class="img-fluid" alt="DJ Timmy Turner">
+		</div>
+		<div class="container-fluid">
+			<div class="row justify-content-md-center">
+				<div class="col-md-9 col-md-6">
+					<div class="about">
+
+						<h3>DJ Timmy Turner</h3>
+						<h5>An experienced DJ ready to energize your event!</h5>
+
+						<p>Musician, producer, DJ, promoter, and electronic music enthusiast, DJ Timmy Turner hails from Malmö, Sweden. After humble beginnings playing at local nightclubs, he has held multiple residencies, expanded worldwide, and has crafted a variety of mixes. Originally inspired by EDM and funk artists from his native land, Timmy has finely tuned his sound through constant experimentation.
+						</p>
+
+						<p>Having opened for well-known DJs such as Tiësto, Pauly D and Fisher, Timmy Turner is no stranger to the limelight. His Summer 2019 tour, “I Wish I Had a DJ”, gained him a place on New House Magazine’s European DJs to watch list. Above all else, he is a purveyor of deep, infectious dance grooves and a feel-good atmosphere. Catch him as he plays bars, clubs and college campuses during his return to action this Spring.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

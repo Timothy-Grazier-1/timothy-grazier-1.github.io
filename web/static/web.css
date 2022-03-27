@@ -1,0 +1,118 @@
+tml {
+    height: 100%;
+}
+body {
+    min-height: 100%;
+}
+
+#content {
+    min-height: 100%;
+}
+
+section#layout > .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+section#layout .nav .logo:hover {
+    color: #ae1717;
+    font-weight: 700;
+}
+
+section#layout .navbar {
+    padding-left: 31px !important;
+    padding-right: 31px !important;
+    margin-bottom: 0;
+}
+
+section#layout .navbar .logo {
+    display: flex;
+}
+
+section#layout .navbar .logo img {
+    float: left;
+    display: block;
+    max-width: 100%;
+    height: 60px;
+}
+
+section#layout .navbar .logo p {
+    padding-left: 10px;
+    color: #000;
+    font-family: 'Raleway', sans-serif;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    float: left;
+    margin: auto;
+    vertical-align: text-bottom;
+}
+
+section#layout .nav-item {
+    padding: 0 10px 0 10px;
+    list-style-type: none;
+    text-align: right;
+}
+
+section#layout .nav-item a {
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #000;
+}
+
+section#layout .navbar .logo p:hover, section#layout .nav-link.active, section#layout .nav-link:hover {
+    color: #ae1717;
+    font-weight: 700;
+    text-decoration: none !important;
+}
+
+section#layout .navbar-toggler:hover, section#layout .navbar-toggler:hover:after {
+    outline: thin dotted;
+}
+
+@media(min-width:768px){
+    section#layout > div > nav > button {
+        display: none;
+    }
+
+    section#layout .navbar-collapse {
+        display: block;
+        flex-basis: auto;
+        flex-grow: 0;
+    }
+
+    section#layout .navbar-nav {
+        flex-direction: row;
+    }
+}
+
+footer .footer-image {
+    top: 12.5px;
+    left: 0;
+    height: 75px;
+}
+footer .col-sm > p, footer .col-sm > p > a {
+    text-align: center;
+    color: #871218;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+footer .col-sm > img {
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+
+@media(max-width:767px) {
+
+    footer .center {
+        display: none;
+    }
+
+    footer .right {
+        display: none;
+    }
+}
