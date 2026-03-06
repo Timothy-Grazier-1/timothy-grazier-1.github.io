@@ -20,9 +20,9 @@ KEY FINDINGS
 2. DPVO Python API (princeton-vl/DPVO):
    - Class: dpvo.dpvo.DPVO(cfg, network_weights_path, ht, wd, viz=False)
    - Call:  dpvo_instance(timestamp: int, image: torch.Tensor[C,H,W], intrinsics: np.ndarray[fx,fy,cx,cy])
-   - End:   (timestamps, poses) = dpvo_instance.terminate()
+   - End:   (poses, timestamps) = dpvo_instance.terminate()  # poses FIRST
    - Image tensor must be uint8 RGB on CUDA, shape (3, H, W)
-   - Intrinsics: np.array([fx, fy, cx, cy]) in pixels
+   - Intrinsics: torch.Tensor([fx, fy, cx, cy], dtype=float32).cuda()  — NOT numpy
 
 3. OpenGRiD / AirSim Interface:
    *** NOTE: OpenGRiD-specific documentation was not publicly available at time of research ***
@@ -90,7 +90,9 @@ IMAGE_WIDTH  = 640
 
 # Camera intrinsics [fx, fy, cx, cy] in pixels
 # TODO: Replace with your OpenGRiD camera calibration values
-CAMERA_INTRINSICS = np.array([320.0, 320.0, 320.0, 240.0], dtype=np.float32)
+# NOTE: DPVO expects intrinsics as a float32 CUDA tensor, not a numpy array.
+#       We store the numpy values here and convert in process_frame().
+CAMERA_INTRINSICS_NP = np.array([320.0, 320.0, 320.0, 240.0], dtype=np.float32)
 
 # Camera name in OpenGRiD / AirSim scene
 CAMERA_NAME = "front_center"
@@ -231,8 +233,11 @@ class DPVOPoseTracker:
                  .cuda()
         )
 
+        # DPVO requires intrinsics as a float32 CUDA tensor, shape [4]
+        intrinsics_tensor = torch.from_numpy(CAMERA_INTRINSICS_NP).cuda()
+
         with torch.no_grad():
-            self.dpvo(timestamp, image_tensor, CAMERA_INTRINSICS)
+            self.dpvo(timestamp, image_tensor, intrinsics_tensor)
 
         self._frame_count += 1
 
@@ -241,15 +246,14 @@ class DPVOPoseTracker:
         Returns the most recent 4×4 SE3 pose (camera-to-world) as a numpy array.
         Returns identity before DPVO has enough frames to initialise.
         """
-        # DPVO exposes self.dpvo.poses as a (N, 7) tensor [tx,ty,tz, qx,qy,qz,qw]
-        # Convert the latest estimate to a 4×4 matrix.
+        # DPVO stores poses in the PatchGraph: self.dpvo.pg.poses_ shape (BUFFER_SIZE, 7)
+        # Format: [x, y, z, qx, qy, qz, qw] (world-from-camera convention)
         try:
-            poses = self.dpvo.poses          # shape (BUFFER_SIZE, 7)
-            n     = self.dpvo.n              # number of frames ingested so far
+            n = self.dpvo.n              # number of frames ingested so far
             if n < 2:
                 return np.eye(4)
 
-            latest = poses[n - 1].cpu().numpy()   # [tx, ty, tz, qx, qy, qz, qw]
+            latest = self.dpvo.pg.poses_[n - 1].cpu().numpy()  # [x,y,z,qx,qy,qz,qw]
             T = _pose_vec_to_matrix(latest)
             with self._lock:
                 self._last_pose = T
@@ -264,12 +268,13 @@ class DPVOPoseTracker:
         """
         print("[DPVO] Finalizing trajectory …")
         with torch.no_grad():
-            traj = self.dpvo.terminate()    # returns (timestamps_np, poses_np)
-        # traj[1] shape: (N, 7) — convert to list of 4×4 matrices
-        timestamps = traj[0]
-        pose_mats  = [_pose_vec_to_matrix(p) for p in traj[1]]
-        print(f"[DPVO] Trajectory has {len(pose_mats)} keyframes.")
-        return timestamps, pose_mats
+            # terminate() returns (poses, tstamps) — poses FIRST
+            # poses: numpy [N, 7] = [x, y, z, qx, qy, qz, qw] per frame (interpolated)
+            # tstamps: numpy [N] float64 frame indices
+            poses_np, tstamps_np = self.dpvo.terminate()
+        pose_mats = [_pose_vec_to_matrix(p) for p in poses_np]
+        print(f"[DPVO] Trajectory has {len(pose_mats)} frames.")
+        return tstamps_np, pose_mats
 
 
 def _pose_vec_to_matrix(pose_vec: np.ndarray) -> np.ndarray:

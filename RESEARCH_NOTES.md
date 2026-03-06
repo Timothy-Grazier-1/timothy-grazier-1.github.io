@@ -77,12 +77,14 @@ dpvo = DPVO(cfg, "models/dpvo.pth", ht=480, wd=640, viz=False)
 # 2. Per-frame call (inside loop)
 #    timestamp : monotonically increasing int (frame index)
 #    image     : torch.Tensor shape (3, H, W), dtype uint8, on CUDA
-#    intrinsics: np.array([fx, fy, cx, cy], dtype=float32)
+#    intrinsics: torch.Tensor([fx, fy, cx, cy], dtype=float32).cuda()  ← MUST be CUDA tensor
 dpvo(timestamp, image_tensor, intrinsics)
 
 # 3. Finalize after all frames processed
-timestamps, poses = dpvo.terminate()
-# poses shape: (N, 7) — [tx, ty, tz, qx, qy, qz, qw] per keyframe
+# IMPORTANT: terminate() returns (poses, tstamps) — poses FIRST, tstamps SECOND
+poses, tstamps = dpvo.terminate()
+# poses  shape: (N, 7) — [x, y, z, qx, qy, qz, qw] per frame (world-from-camera, interpolated)
+# tstamps shape: (N,)   — float64 frame indices
 ```
 
 ### Converting AirSim frame to DPVO tensor
@@ -93,9 +95,10 @@ import airsim, cv2, numpy as np, torch
 responses = client.simGetImages([
     airsim.ImageRequest("front_center", airsim.ImageType.Scene, False, False)
 ])
-img1d = np.frombuffer(responses[0].image_data_uint8, dtype=np.uint8)
-img   = img1d.reshape(responses[0].height, responses[0].width, 3)  # RGB
-tensor = torch.from_numpy(img).permute(2,0,1).cuda()               # (3,H,W) uint8
+img1d      = np.frombuffer(responses[0].image_data_uint8, dtype=np.uint8)
+img        = img1d.reshape(responses[0].height, responses[0].width, 3)  # RGB
+tensor     = torch.from_numpy(img).permute(2,0,1).cuda()                # (3,H,W) uint8
+intrinsics = torch.tensor([fx, fy, cx, cy], dtype=torch.float32).cuda() # MUST be CUDA tensor
 ```
 
 ---
